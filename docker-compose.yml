@@ -12,6 +12,13 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     restart: always
 
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    restart: on-failure
+
   service-registry:
     build: ./service-registry
     container_name: service-registry
@@ -26,7 +33,9 @@ services:
       - "8080:8080"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry
 
   user-service:
@@ -37,7 +46,9 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/user_db
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry
 
   operator-service:
@@ -48,7 +59,9 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/operator_db
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry
 
   payment-service:
@@ -60,7 +73,9 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/payment_db
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry
       - rabbitmq
 
@@ -72,7 +87,9 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry
       - rabbitmq
 
@@ -84,5 +101,7 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/recharge_db
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
     depends_on:
+      - config-server
       - service-registry

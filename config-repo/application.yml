@@ -1,0 +1,8 @@
+# Shared properties across all microservices can go here
+# e.g., eureka client settings:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
