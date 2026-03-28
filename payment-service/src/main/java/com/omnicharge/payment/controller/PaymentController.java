@@ -15,4 +15,9 @@ public class PaymentController {
     public PaymentTransaction makePayment(@RequestBody PaymentTransaction transaction) {
         return paymentService.processPayment(transaction);
     }
+
+    @GetMapping("/user/{userId}")
+    public java.util.List<PaymentTransaction> getUserPayments(@PathVariable Long userId) {
+        return paymentService.getPaymentsByUserId(userId);
+    }
 }

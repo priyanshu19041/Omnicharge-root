@@ -28,4 +28,8 @@ public class PaymentService {
             
         return saved;
     }
+
+    public java.util.List<PaymentTransaction> getPaymentsByUserId(Long userId) {
+        return repository.findByUserId(userId);
+    }
 }

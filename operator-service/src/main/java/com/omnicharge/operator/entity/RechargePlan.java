@@ -11,7 +11,7 @@ public class RechargePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String planType; // PREPAID, POSTPAID
+    private String planType;
     private BigDecimal price;
     private Integer validityDays;
     private String description;

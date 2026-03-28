@@ -6,8 +6,8 @@ spring:
     name: operator-service
   datasource:
     url: jdbc:postgresql://localhost:5432/operator_db
-    username: root
-    password: rootpassword
+    username: postgres
+    password: root
   jpa:
     hibernate:
       ddl-auto: update

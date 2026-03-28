@@ -6,8 +6,8 @@ spring:
     name: recharge-service
   datasource:
     url: jdbc:postgresql://localhost:5432/recharge_db
-    username: root
-    password: rootpassword
+    username: postgres
+    password: root
   jpa:
     hibernate:
       ddl-auto: update

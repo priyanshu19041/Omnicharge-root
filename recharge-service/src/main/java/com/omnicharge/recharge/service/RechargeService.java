@@ -2,8 +2,10 @@ package com.omnicharge.recharge.service;
 
 import com.omnicharge.recharge.client.OperatorClient;
 import com.omnicharge.recharge.client.PaymentClient;
+import com.omnicharge.recharge.client.UserClient;
 import com.omnicharge.recharge.dto.PaymentTransactionDto;
 import com.omnicharge.recharge.dto.RechargePlanDto;
+import com.omnicharge.recharge.dto.UserDto;
 import com.omnicharge.recharge.entity.RechargeRequest;
 import com.omnicharge.recharge.repository.RechargeRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,22 @@ public class RechargeService {
     private final RechargeRepository repository;
     private final OperatorClient operatorClient;
     private final PaymentClient paymentClient;
+    private final UserClient userClient;
 
     public RechargeRequest initiateRecharge(RechargeRequest request) {
         request.setRequestDate(LocalDateTime.now());
         request.setStatus("PENDING");
+        
+        // 0. Validate Mobile Number vs Registered Account
+        try {
+            UserDto user = userClient.getUserById(request.getUserId());
+            if (user.getPhoneNumber() == null || !user.getPhoneNumber().equals(request.getMobileNumber())) {
+                throw new RuntimeException("Validation Failed: Provided mobile number does not match registered account number");
+            }
+        } catch (RuntimeException e) {
+            log.error("Phone Validation Error", e);
+            throw e; // Handled nicely by Global Exception Handler
+        }
         
         // 1. Validate Plan with Operator Service
         RechargePlanDto plan;

@@ -2,6 +2,8 @@ package com.omnicharge.user.controller;
 
 import com.omnicharge.user.entity.User;
 import com.omnicharge.user.service.UserService;
+import com.omnicharge.user.dto.AuthResponse;
+import com.omnicharge.user.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,6 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        return userService.login(request);
+    }
     
     @PostMapping("/register")
     public User register(@RequestBody User user) {
