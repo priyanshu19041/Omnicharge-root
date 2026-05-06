@@ -1,1 +1,3 @@
-com/omnicharge/gateway/ApiGatewayApplication.class
+com\omnicharge\gateway\filter\AdminAuthFilter.class
+com\omnicharge\gateway\config\CorsConfig.class
+com\omnicharge\gateway\ApiGatewayApplication.class

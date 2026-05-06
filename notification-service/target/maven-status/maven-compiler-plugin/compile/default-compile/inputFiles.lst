@@ -1,4 +1,5 @@
-/app/notification-service/src/main/java/com/omnicharge/notification/service/NotificationConsumer.java
-/app/notification-service/src/main/java/com/omnicharge/notification/config/RabbitMQConfig.java
-/app/notification-service/src/main/java/com/omnicharge/notification/NotificationServiceApplication.java
-/app/notification-service/src/main/java/com/omnicharge/notification/controller/NotificationController.java
+C:\Users\LENOVO\OneDrive\Desktop\omni2\omni2\notification-service\src\main\java\com\omnicharge\notification\controller\NotificationController.java
+C:\Users\LENOVO\OneDrive\Desktop\omni2\omni2\notification-service\src\main\java\com\omnicharge\notification\NotificationServiceApplication.java
+C:\Users\LENOVO\OneDrive\Desktop\omni2\omni2\notification-service\src\main\java\com\omnicharge\notification\service\NotificationConsumer.java
+C:\Users\LENOVO\OneDrive\Desktop\omni2\omni2\notification-service\src\main\java\com\omnicharge\notification\config\RabbitMQConfig.java
+C:\Users\LENOVO\OneDrive\Desktop\omni2\omni2\notification-service\src\main\java\com\omnicharge\notification\config\RestTemplateConfig.java

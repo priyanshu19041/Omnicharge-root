@@ -12,4 +12,10 @@ public class TelecomOperator {
     private Long id;
     private String name;
     private String region;
+    
+    private Boolean active = true;
+
+    @OneToMany(mappedBy = "operator", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @com.fasterxml.jackson.annotation.JsonManagedReference
+    private java.util.List<RechargePlan> plans;
 }

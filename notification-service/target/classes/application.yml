@@ -9,6 +9,18 @@ spring:
     port: 5672
     username: guest
     password: guest
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: priyanshu1singh11@gmail.com
+    password: "uzxpivpxguurvpah"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 eureka:
   client:

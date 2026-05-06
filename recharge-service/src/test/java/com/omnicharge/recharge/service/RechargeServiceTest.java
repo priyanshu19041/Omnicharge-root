@@ -2,8 +2,10 @@ package com.omnicharge.recharge.service;
 
 import com.omnicharge.recharge.client.OperatorClient;
 import com.omnicharge.recharge.client.PaymentClient;
+import com.omnicharge.recharge.client.UserClient;
 import com.omnicharge.recharge.dto.PaymentTransactionDto;
 import com.omnicharge.recharge.dto.RechargePlanDto;
+import com.omnicharge.recharge.dto.UserDto;
 import com.omnicharge.recharge.entity.RechargeRequest;
 import com.omnicharge.recharge.repository.RechargeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,14 +33,22 @@ public class RechargeServiceTest {
     @Mock
     private PaymentClient paymentClient;
 
+    @Mock
+    private UserClient userClient;
+
     @InjectMocks
     private RechargeService rechargeService;
 
     private RechargeRequest dummyRequest;
     private RechargePlanDto dummyPlan;
+    private UserDto dummyUser;
 
     @BeforeEach
     void setUp() {
+        dummyUser = new UserDto();
+        dummyUser.setId(1L);
+        dummyUser.setPhoneNumber("9876543210");
+
         dummyRequest = new RechargeRequest();
         dummyRequest.setUserId(1L);
         dummyRequest.setMobileNumber("9876543210");
@@ -53,6 +63,7 @@ public class RechargeServiceTest {
 
     @Test
     void shouldFailWhenPlanIsInvalid() {
+        when(userClient.getUserById(1L)).thenReturn(dummyUser);
         when(operatorClient.getPlanById(1L)).thenThrow(new RuntimeException("Operator service down"));
         when(repository.save(any(RechargeRequest.class))).thenAnswer(i -> i.getArguments()[0]);
 
@@ -64,6 +75,7 @@ public class RechargeServiceTest {
 
     @Test
     void shouldProcessSuccessfulRecharge() {
+        when(userClient.getUserById(1L)).thenReturn(dummyUser);
         when(operatorClient.getPlanById(1L)).thenReturn(dummyPlan);
 
         PaymentTransactionDto successPayment = new PaymentTransactionDto();

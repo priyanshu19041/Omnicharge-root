@@ -11,12 +11,14 @@ public class RechargePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String planType;
+    private String planName;
+    private String dataBenefits;
     private BigDecimal price;
     private Integer validityDays;
     private String description;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "operator_id")
+    @com.fasterxml.jackson.annotation.JsonBackReference
     private TelecomOperator operator;
 }

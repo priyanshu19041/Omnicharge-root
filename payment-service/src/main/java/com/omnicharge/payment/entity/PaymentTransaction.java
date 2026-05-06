@@ -19,4 +19,7 @@ public class PaymentTransaction {
     private String status; // SUCCESS, FAILED
     private String transactionId;
     private LocalDateTime timestamp;
+    
+    private String razorpayOrderId;
+    private String razorpayPaymentId;
 }

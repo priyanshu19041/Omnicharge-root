@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,18 +27,19 @@ public class RechargeService {
     public RechargeRequest initiateRecharge(RechargeRequest request) {
         request.setRequestDate(LocalDateTime.now());
         request.setStatus("PENDING");
-        
-        // 0. Validate Mobile Number vs Registered Account
+
+        // 0. Validate User Existence
         try {
             UserDto user = userClient.getUserById(request.getUserId());
-            if (user.getPhoneNumber() == null || !user.getPhoneNumber().equals(request.getMobileNumber())) {
-                throw new RuntimeException("Validation Failed: Provided mobile number does not match registered account number");
+            if (user == null) {
+                throw new RuntimeException("Validation Failed: User not found");
             }
+            // Mobile number validation removed: User can recharge any number
         } catch (RuntimeException e) {
-            log.error("Phone Validation Error", e);
+            log.error("User Validation Error", e);
             throw e; // Handled nicely by Global Exception Handler
         }
-        
+
         // 1. Validate Plan with Operator Service
         RechargePlanDto plan;
         try {
@@ -48,15 +50,15 @@ public class RechargeService {
             request.setStatus("FAILED");
             return repository.save(request);
         }
-        
+
         request.setAmount(plan.getPrice());
-        
+
         // 2. Process Payment via Payment Service
         PaymentTransactionDto paymentReq = new PaymentTransactionDto();
         paymentReq.setUserId(request.getUserId());
         paymentReq.setAmount(request.getAmount());
         paymentReq.setRechargePlanId(request.getPlanId());
-        
+
         try {
             PaymentTransactionDto paymentRes = paymentClient.makePayment(paymentReq);
             if ("SUCCESS".equals(paymentRes.getStatus())) {
@@ -69,7 +71,23 @@ public class RechargeService {
             log.error("Payment failed", e);
             request.setStatus("FAILED");
         }
-        
+
         return repository.save(request);
     }
+
+    // Get full recharge history for a user (powers the History page)
+    public List<RechargeRequest> getRechargesByUserId(Long userId) {
+        return repository.findByUserId(userId);
+    }
+
+    // Get a single recharge record by ID (for receipt / detail view)
+    public RechargeRequest getRechargeById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recharge record not found"));
+    }
+
+    public List<RechargeRequest> getAllRecharges() {
+        return repository.findAll();
+    }
 }
+
